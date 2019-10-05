@@ -1,0 +1,9 @@
+{
+    "golang_mod_name": "github.com/sample/sample",
+    "mod_name": "{{cookiecutter.golang_mod_name.split('/') | last}}",
+    "app_name": "{{cookiecutter.mod_name | lower}}",
+    "type": [
+        "http",
+        "msg"
+    ]
+}

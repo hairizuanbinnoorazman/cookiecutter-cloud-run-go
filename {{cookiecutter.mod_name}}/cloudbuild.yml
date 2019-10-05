@@ -1,0 +1,25 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/{{cookiecutter.app_name}}:$SHORT_SHA",
+        ".",
+      ]
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/{{cookiecutter.app_name}}:$SHORT_SHA"]
+  - name: "gcr.io/cloud-builders/gcloud"
+    args:
+      [
+        "beta",
+        "run",
+        "deploy",
+        "{{cookiecutter.app_name}}",
+        "--concurrency=80",
+        "--memory=1Gi",
+        "--platform=managed",
+        {% if cookiecutter.type == "http" %}"--allow-unauthenticated",{% endif %}
+        "--region=asia-northeast1",
+        "--image=gcr.io/$PROJECT_ID/{{cookiecutter.app_name}}:$SHORT_SHA",
+      ]
