@@ -2,12 +2,10 @@ package main
 
 import (
 	"net/http"
-
-	"github.com/sirupsen/logrus"
 )
 
 type exampleHandler struct {
-	logger *logrus.Logger
+	logger Logger
 }
 
 func (h exampleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

@@ -5,12 +5,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-
-	"github.com/sirupsen/logrus"
 )
 
 type exampleHandler struct {
-	logger *logrus.Logger
+	logger Logger
 }
 
 type PubsubMsg struct {
