@@ -2,6 +2,7 @@ APP_NAME?="{{cookiecutter.app_name}}"
 TOPIC_NAME?="{{cookiecutter.app_name}}"
 SUB_NAME?="{{cookiecutter.app_name}}"
 SERVICE_URL=$$(gcloud beta run services describe {{cookiecutter.app_name}} --region=asia-northeast1 --platform=managed | yq r - status.url)
+DATA=$$(printf '{"sample": "data"}' | base64)
 
 # The following commands are for handling when the application is to be paired with Google Pubsub
 # Before running this command, ensure that PROJECT_ID environment variable is set
@@ -17,3 +18,9 @@ pubsub-prep:
 
 sendmsg:
 	gcloud pubsub topics publish $(TOPIC_NAME) --message "sample message"
+
+sampledata:
+	echo $(DATA)
+
+local-http:
+	curl localhost:8080 -X POST -H "Content-Type: application/json" -d '{"message": {"data": "eyJzYW1wbGUiOiAiZGF0YSJ9"}}'
