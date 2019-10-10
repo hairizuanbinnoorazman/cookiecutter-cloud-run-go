@@ -1,5 +1,14 @@
 steps:
-  - name: "gcr.io/cloud-builders/docker"
+  {% if cookiecutter.use_secret == "yes" %}- name: "gcr.io/cloud-builders/gcloud"
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=file.json.enc
+      - --plaintext-file=file.json
+      - --location=global
+      - --keyring=test
+      - --key=test1
+  {% endif %}- name: "gcr.io/cloud-builders/docker"
     args:
       [
         "build",
@@ -19,7 +28,7 @@ steps:
         "--concurrency=80",
         "--memory=1Gi",
         "--platform=managed",
-        {% if cookiecutter.type == "http" %}"--allow-unauthenticated",{% endif %}
-        "--region=asia-northeast1",
+        {% if cookiecutter.type == "http" %}"--allow-unauthenticated",
+        {% endif %}"--region=asia-northeast1",
         "--image=gcr.io/$PROJECT_ID/{{cookiecutter.app_name}}:$SHORT_SHA",
       ]
