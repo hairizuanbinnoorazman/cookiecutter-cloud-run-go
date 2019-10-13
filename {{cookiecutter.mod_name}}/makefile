@@ -1,4 +1,4 @@
-APP_NAME?="{{cookiecutter.app_name}}"
+{% if cookiecutter.type == "msg" %}APP_NAME?="{{cookiecutter.app_name}}"
 TOPIC_NAME?="{{cookiecutter.app_name}}"
 SUB_NAME?="{{cookiecutter.app_name}}"
 SERVICE_URL=$$(gcloud beta run services describe {{cookiecutter.app_name}} --region=asia-northeast1 --platform=managed | yq r - status.url)
@@ -24,3 +24,10 @@ sampledata:
 
 local-http:
 	curl localhost:8080 -X POST -H "Content-Type: application/json" -d '{"message": {"data": "eyJzYW1wbGUiOiAiZGF0YSJ9"}}'
+{% endif %}
+setup:
+	@echo "Run setup steps"
+	{% if cookiecutter.use_gcs == "yes" %}~/go/bin/goimports main.go > main_temp.go && mv main_temp.go main.go{% endif %}
+	{% if cookiecutter.type == "http" and cookiecutter.use_gcs == "yes" %}~/go/bin/goimports http_handlers.go > http_handlers_temp.go && mv http_handlers_temp.go http_handlers.go{% endif %}
+	{% if cookiecutter.type == "msg" and cookiecutter.use_gcs == "yes" %}~/go/bin/goimports msg_handlers.go > msg_handlers_temp.go && mv msg_handlers_temp.go msg_handlers.go{% endif %}
+	

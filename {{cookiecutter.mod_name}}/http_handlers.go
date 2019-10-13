@@ -6,6 +6,7 @@ import (
 
 type exampleHandler struct {
 	logger Logger
+	{% if cookiecutter.use_gcs == "yes" %}client *storage.Client{% endif %}
 }
 
 func (h exampleHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

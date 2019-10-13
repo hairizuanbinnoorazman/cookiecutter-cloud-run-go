@@ -9,6 +9,7 @@ import (
 
 type exampleHandler struct {
 	logger Logger
+	{% if cookiecutter.use_gcs == "yes" %}client *storage.Client{% endif %}
 }
 
 type PubsubMsg struct {

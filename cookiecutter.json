@@ -6,5 +6,6 @@
         "http",
         "msg"
     ],
+    "use_gcs": "no",
     "use_secret": "no"
 }

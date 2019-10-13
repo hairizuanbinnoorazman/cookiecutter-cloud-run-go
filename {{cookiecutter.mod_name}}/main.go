@@ -32,8 +32,18 @@ func main() {
 	}
 	logger.Infof("Application Mode: %v", mode)
 
-	r := mux.NewRouter()
-	r.Handle("/", exampleHandler{logger: logger})
+	{% if cookiecutter.use_gcs == "yes" %}credJSON, err := ioutil.ReadFile("/example-cred.json")
+	if err != nil {
+		logger.Error("Unable to load example-cred.json file")
+	}
+	xClient, err := storage.NewClient(context.Background(), option.WithCredentialsJSON(credJSON))
+	if err != nil {
+		logger.Error("Unable to create storage client")
+	}
+
+	{% endif %}r := mux.NewRouter()
+	{% if cookiecutter.use_gcs == "yes" %}r.Handle("/", exampleHandler{logger: logger, client: xClient})
+	{% else %}r.Handle("/", exampleHandler{logger: logger}){% endif %}
 
 	srv := http.Server{
 		Handler:      r,
